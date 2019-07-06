@@ -38,6 +38,7 @@
         this.dateLimit = false;
         this.autoApply = false;
         this.singleDatePicker = false;
+        this.showClearBtn = false;
         this.showDropdowns = false;
         this.showWeekNumbers = false;
         this.showISOWeekNumbers = false;
@@ -224,6 +225,10 @@
         if (typeof options.buttonClasses === 'object')
             this.buttonClasses = options.buttonClasses.join(' ');
 
+        if (typeof options.showClearBtn === 'boolean') {
+            this.showClearBtn = options.showClearBtn;
+        }
+
         if (typeof options.showDropdowns === 'boolean')
             this.showDropdowns = options.showDropdowns;
 
@@ -404,6 +409,7 @@
             .on('click.daterangepicker', '.double-prev', $.proxy(this.clickDoublePrev, this))
             .on('click.daterangepicker', '.double-next', $.proxy(this.clickDoubleNext, this))
             .on('click.daterangepicker', 'td.available', $.proxy(this.clickDate, this))
+            .on('click.daterangepicker', '.clear-btn', $.proxy(this.clearValue, this))
             .on('mouseenter.daterangepicker', 'td.available', $.proxy(this.hoverDate, this))
             .on('mouseleave.daterangepicker', 'td.available', $.proxy(this.updateFormInputs, this))
             .on('change.daterangepicker', 'select.yearselect', $.proxy(this.monthOrYearChanged, this))
@@ -846,6 +852,10 @@
 
                 }
                 html += '</tr>';
+            }
+
+            if (this.showClearBtn) {
+                html += '<tr><td colspan="7"><a href="javascript:void(0)" class="clear-btn">Clear</a></td></tr>';
             }
 
             html += '</tbody>';
@@ -1413,6 +1423,11 @@
             this.endDate = this.oldEndDate;
             this.hide();
             this.element.trigger('cancel.daterangepicker', this);
+        },
+
+        clearValue: function(e) {
+            this.hide();
+            this.element.trigger('clear.daterangepicker', this);
         },
 
         monthOrYearChanged: function(e) {
